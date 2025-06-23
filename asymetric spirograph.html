@@ -1,0 +1,101 @@
+<html>
+    <Head>
+<title>HTML Template</title>
+<script src = p5.js></script>
+    </Head>
+    
+    <body>
+
+        <script>
+
+let maxTheta = 12;
+let maxWeight = 1;
+let volume = 0.24;
+let freqX1 = 1;
+let freqX2 = 3;
+let freqX3 = 5;
+let freqX4 = 7;
+let freqY1 = 3;
+let freqY2 = 5;
+let freqY3 = 7;
+let freqY4 = 11;
+let lfo01 = 6.0;
+let lfo02 = 7.0;
+let lfo03 = 8.0;
+let lfo04 = 9.0;
+let vol01 = 0.125;
+let vol02 = 0.125;
+let vol03 = 0.125;
+let vol04 = 0.125;
+
+function setup() {
+
+  createCanvas(windowWidth, windowHeight);
+
+  background(0);
+
+  blendMode(BLEND);
+}
+
+function draw() {
+  translate(width / 2, height / 2);
+
+  beginShape();
+
+  for (let theta = 0; theta <= maxTheta * PI; theta += 0.002) {
+    let phaseX = PI * 2.0;
+    let phaseY = PI * 0.5;
+
+    let amp01 = (height * vol01) * ((sin(radians(frameCount / lfo01)) + 1) / 2);
+    let amp02 = (height * vol02) * ((sin(radians(frameCount / lfo02)) + 1) / 2);
+    let amp03 = (height * vol03) * ((sin(radians(frameCount / lfo03)) + 1) / 2);
+    let amp04 = (height * vol04) * ((sin(radians(frameCount / lfo04)) + 1) / 2);
+
+    let totalAmpX = amp01 + amp02 + amp03 + amp04;
+    let volumeMultiplierX = totalAmpX / (width * 2.0);
+    let newAmp01X = amp01 / volumeMultiplierX;
+    let newAmp02X = amp02 / volumeMultiplierX;
+    let newAmp03X = amp03 / volumeMultiplierX;
+    let newAmp04X = amp04 / volumeMultiplierX;
+
+    let totalAmpY = amp01 + amp02 + amp03 + amp04;
+    let volumeMultiplierY = totalAmpY / (height * 2.0);
+    let newAmp01Y = amp01 / volumeMultiplierY;
+    let newAmp02Y = amp02 / volumeMultiplierY;
+    let newAmp03Y = amp03 / volumeMultiplierY;
+    let newAmp04Y = amp04 / volumeMultiplierY;
+
+    let x = (
+      (sin((theta * freqX1) + phaseX) * newAmp01X) +
+      (sin((theta * freqX2) + phaseX) * newAmp02X) +
+      (sin((theta * freqX3) + phaseX) * newAmp03X) +
+      (sin((theta * freqX4) + phaseX) * newAmp04X)
+    ) * volume;
+    let y = (
+      (sin((theta * freqY1) + phaseY) * newAmp01Y) +
+      (sin((theta * freqY2) + phaseY) * newAmp02Y) +
+      (sin((theta * freqY3) + phaseY) * newAmp03Y) +
+      (sin((theta * freqY4) + phaseY) * newAmp04Y)
+    ) * volume;
+
+    strokeWeight(map(theta, 0, maxTheta, 1, maxWeight));
+
+    colorMode(RGB, 255, 255, 255, 100);
+
+    let red = map(sin(radians(frameCount / 0.9) + 0), -1, 1, 0, 255);
+    let green = map(sin(radians(frameCount / 1.0) + 22), -1, 1, 0, 255);
+    let blue = map(sin(radians(frameCount / 1.1) + 45), -1, 1, 0, 255);
+
+    stroke(red, green, blue);
+
+    point(x, y);
+  }
+
+  endShape();
+}
+        
+        </script>
+
+    </body>
+        
+</html>
